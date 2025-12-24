@@ -21,7 +21,6 @@
         h1 { font-family: 'Dancing Script', cursive; font-size: 3.5rem; margin: 0; color: #ffeb3b; }
         p { font-size: 1.4rem; margin-top: 10px; }
 
-        /* The Small Apology Envelope */
         .apology-box {
             position: fixed; bottom: 30px; z-index: 3;
             text-align: center; cursor: pointer;
@@ -43,7 +42,35 @@
             box-shadow: 0 5px 15px rgba(0,0,0,0.5);
         }
         .envelope:hover { transform: scale(1.1); }
-        @keyframes glow { from { text-shadow: 0 0 10px #fff, 0 0 20px #ffeb3b; } to { text-shadow: 0 0 20px #fff, 0 0 30px #f44336; } }
+
+        /* 🎵 Cute Music Button */
+        .music-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 4;
+            background: rgba(255,255,255,0.15);
+            border: 1px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            cursor: pointer;
+            backdrop-filter: blur(6px);
+            transition: 0.3s;
+        }
+        .music-btn:hover {
+            transform: scale(1.1);
+            background: rgba(255,255,255,0.25);
+        }
+
+        @keyframes glow {
+            from { text-shadow: 0 0 10px #fff, 0 0 20px #ffeb3b; }
+            to { text-shadow: 0 0 20px #fff, 0 0 30px #f44336; }
+        }
     </style>
 </head>
 <body>
@@ -54,9 +81,19 @@
         <p>Because you are the <br><strong>cutest gift</strong> I have.</p>
     </div>
 
+    <!-- 🎵 Music Button -->
+    <div class="music-btn" onclick="toggleMusic()">🎵</div>
+
+    <!-- 🎶 Cute Christmas Song -->
+    <audio id="bgMusic" loop>
+        <!-- Replace this link if you want a different song -->
+        <source src="youreyes.mp3" type="audio/mpeg">
+    </audio>
+
     <div class="apology-box" onclick="toggleApology()">
         <div class="apology-text" id="sorryNote">
-            I'm so sorry for not being able to wish you first for your birthday. I hope this Christmas surprise makes you smile a little more. ❤️
+            I'm so sorry for not being able to wish you first for your birthday.
+            I hope this Christmas surprise makes you smile a little more. ❤️
         </div>
         <div class="envelope">💌</div>
         <span style="font-size: 10px; opacity: 0.6;">open me</span>
@@ -68,26 +105,54 @@
             note.style.display = (note.style.display === 'block') ? 'none' : 'block';
         }
 
-        // Simple Snow Logic
+        // 🎵 Music Logic
+        const music = document.getElementById('bgMusic');
+        let playing = false;
+
+        function toggleMusic() {
+            if (!playing) {
+                music.play();
+                playing = true;
+            } else {
+                music.pause();
+                playing = false;
+            }
+        }
+
+        // ❄️ Snow Logic
         const canvas = document.getElementById('snow-canvas');
         const ctx = canvas.getContext('2d');
         let flakes = [];
+
         function init() {
-            canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
             flakes = [];
-            for (let i = 0; i < 120; i++) flakes.push({x: Math.random()*canvas.width, y: Math.random()*canvas.height, r: Math.random()*2+1});
+            for (let i = 0; i < 120; i++) {
+                flakes.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    r: Math.random() * 2 + 1
+                });
+            }
         }
+
         function draw() {
-            ctx.clearRect(0,0,canvas.width, canvas.height);
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
             ctx.fillStyle = "rgba(255,255,255,0.8)";
             ctx.beginPath();
             flakes.forEach(f => {
-                ctx.moveTo(f.x, f.y); ctx.arc(f.x, f.y, f.r, 0, Math.PI*2);
-                f.y += 1; if(f.y > canvas.height) f.y = -5;
+                ctx.moveTo(f.x, f.y);
+                ctx.arc(f.x, f.y, f.r, 0, Math.PI * 2);
+                f.y += 1;
+                if (f.y > canvas.height) f.y = -5;
             });
-            ctx.fill(); requestAnimationFrame(draw);
+            ctx.fill();
+            requestAnimationFrame(draw);
         }
-        init(); draw();
+
+        init();
+        draw();
     </script>
 </body>
 </html>
